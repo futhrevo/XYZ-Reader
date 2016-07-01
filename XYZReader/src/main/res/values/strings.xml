@@ -9,4 +9,7 @@
 
     <string name="up">Up</string>
 
+    <string name="transition_name_title">transition:TITLE</string>
+    <string name="transition_name_subtitle">transition:SUBTITLE</string>
+    <string name="transition_name_thumb">transition:THUMB</string>
 </resources>

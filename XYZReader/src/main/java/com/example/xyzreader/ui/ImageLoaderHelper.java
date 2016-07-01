@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+
 public class ImageLoaderHelper {
     private static ImageLoaderHelper sInstance;
 
@@ -19,7 +20,7 @@ public class ImageLoaderHelper {
         return sInstance;
     }
 
-    private final LruCache<String, Bitmap> mImageCache = new LruCache<String, Bitmap>(20);
+    private final LruCache<String, Bitmap> mImageCache = new LruCache<String, Bitmap>(80);
     private ImageLoader mImageLoader;
 
     private ImageLoaderHelper(Context applicationContext) {
