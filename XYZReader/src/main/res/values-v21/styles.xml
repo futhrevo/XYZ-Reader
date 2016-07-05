@@ -6,7 +6,7 @@
         <item name="colorAccent">@color/theme_accent</item>
         <item name="android:textColorPrimary">@color/theme_text_icons</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowEnterTransition">@transition/slide_left</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@transition/slide_left</item>
 
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
