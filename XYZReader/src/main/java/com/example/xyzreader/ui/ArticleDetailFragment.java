@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
@@ -82,6 +83,7 @@ public class ArticleDetailFragment extends Fragment implements
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
+
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -124,7 +126,11 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoContainerView.setTransitionName("transition:THUMB"+mItemId);
+        }
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 

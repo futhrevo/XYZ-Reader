@@ -1,5 +1,7 @@
 package com.example.xyzreader.ui;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
@@ -11,10 +13,13 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.ScrollView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -23,7 +28,7 @@ import com.example.xyzreader.data.ItemsContract;
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
-public class ArticleDetailActivity extends ActionBarActivity
+public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Cursor mCursor;
@@ -57,25 +62,28 @@ public class ArticleDetailActivity extends ActionBarActivity
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-                mUpButton.animate()
-                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-                        .setDuration(300);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
+                    mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
                 }
-                mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
                 updateUpButtonPosition();
             }
-        });
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mUpButton.animate()
+                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
+                        .setDuration(300);
+            }
+        });
         mUpButtonContainer = findViewById(R.id.up_container);
 
         mUpButton = findViewById(R.id.action_up);
@@ -105,6 +113,40 @@ public class ArticleDetailActivity extends ActionBarActivity
                 mSelectedItemId = mStartId;
             }
         }
+    }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        Log.i("DetailAnimator", "Activity Enter Animation Complete");
+        int startscrollPos = getResources().getDimensionPixelSize(R.dimen.init_scroll_up_distance);
+        ObservableScrollView scrollView = (ObservableScrollView) findViewById(R.id.scrollview);
+        Animator animator = ObjectAnimator.ofInt(scrollView, "scrollY", startscrollPos).setDuration(1000);
+        final Animator animator1 = ObjectAnimator.ofInt(scrollView, "ScrollY", 0).setDuration(500);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                Log.i("DetailAnimator", "animator started");
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animator1.start();
+                Log.i("DetailAnimator", "animator ended");
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                Log.i("DetailAnimator", "animator cancelled");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                Log.i("DetailAnimator", "animator repeat");
+            }
+        });
+
+        animator.start();
     }
 
     @Override

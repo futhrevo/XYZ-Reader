@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -70,7 +73,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         });
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         initLoader();
-
         if (savedInstanceState == null) {
             refresh();
         }
@@ -153,17 +155,18 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    long itemId = getItemId(vh.getAdapterPosition());
 
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                             ArticleListActivity.this,
-                            new Pair<View, String>(view.findViewById(R.id.thumbnail), getString(R.string.transition_name_thumb))
+                            new Pair<View, String>(view.findViewById(R.id.thumbnail), "transition:THUMB"+itemId)
 //                            ,new Pair<View, String>(view.findViewById(R.id.article_title), getString(R.string.transition_name_title))
 //                            ,new Pair<View, String>(view.findViewById(R.id.article_subtitle), getString(R.string.transition_name_subtitle))
                     );
                     Bundle bundle = optionsCompat.toBundle();
 
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+                            ItemsContract.Items.buildItemUri(itemId));
                     startActivity(intent, bundle);
                 }
             });
@@ -185,6 +188,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.thumbnailView.setTransitionName("transition:THUMB"+position);
+            }
         }
 
         @Override
