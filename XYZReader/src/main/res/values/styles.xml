@@ -24,4 +24,8 @@
         <item name="android:textColorPrimary">@color/theme_text_icons</item>
 
     </style>
+
+    <style name="ToolbarHeightStyle">
+        <item name="android:layout_height">168dp</item>
+    </style>
 </resources>

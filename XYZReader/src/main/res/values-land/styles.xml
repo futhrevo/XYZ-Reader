@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ToolbarHeightStyle">
+        <item name="android:layout_height">128dp</item>
+    </style>
+</resources>

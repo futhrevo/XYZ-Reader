@@ -42,7 +42,9 @@
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/detail_card_max_width"
                 android:background="#fff"
-                android:elevation="8dp">
+                android:elevation="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:id="@+id/meta_bar"
